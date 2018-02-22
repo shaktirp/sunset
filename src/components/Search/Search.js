@@ -14,7 +14,19 @@ class Search extends Component {
   }
 
   componentWillMount() {
-    getCoordinates()
+    getCoordinates('San Francisco, CA', this.getCoordinatesCallBack)
+  }
+
+  getCoordinatesCallBack = (err, response, body) => {
+    if (!err) {
+      const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
+      const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
+
+      const coords = xCoordinate + "," + yCoordinate
+      console.log(coords)
+      // getQuality(coords, 'sunset')
+      // getQuality(coords, 'sunrise')
+    }
   }
 
   render() {

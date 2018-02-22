@@ -16,26 +16,18 @@ export function sunsetLogin() {
   }
 }
 
-export function getCoordinates() {
-  sunsetwx.coordinates({
-    location: 'Rochester, NY'
-  }, (err, response, body) => {
-    if (!err) {
-      const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
-      const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
-
-      const coords = xCoordinate + "," + yCoordinate
-      getQuality(coords, 'sunset')
-      getQuality(coords, 'sunrise')
-    }
-  })
+export function getCoordinates(location, callback) {
+  return sunsetwx.coordinates({
+    location: location
+  }, callback)
 }
 
-function getQuality(coords, type) {
+export function getQuality(coords, type) {
   sunsetwx.quality({
     coords: coords,
     type: type
   }, (err, response, body) => {
-    console.log(err, response, body)
+    const props = body["features"][0]["properties"]
+    console.log(props['type'], props['quality'], props['temperature'])
   })
 }
