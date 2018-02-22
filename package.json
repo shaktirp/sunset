@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
+    "json-update": "^3.0.0",
+    "jsonfile": "^4.0.0",
     "material-ui": "^0.20.0",
+    "node-sunsetwx": "0.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "underscore": "^1.8.3",
+    "update-json-file": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
