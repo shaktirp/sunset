@@ -14,10 +14,28 @@ export function sunsetLogin() {
   } else {
     console.info('Key already present')
   }
+}
 
-  // sunsetwx.coordinates({
-  //   location: 'Rochester, NY'
-  // }, callback)
+export function getCoordinates() {
+  sunsetwx.coordinates({
+    location: 'Rochester, NY'
+  }, (err, response, body) => {
+    if (!err) {
+      const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
+      const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
 
+      const coords = xCoordinate + "," + yCoordinate
+      getQuality(coords, 'sunset')
+      getQuality(coords, 'sunrise')
+    }
+  })
+}
 
+function getQuality(coords, type) {
+  sunsetwx.quality({
+    coords: coords,
+    type: type
+  }, (err, response, body) => {
+    console.log(err, response, body)
+  })
 }

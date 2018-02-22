@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
-import { sunsetLogin } from '../../core/sunsetAPI'
+import { getCoordinates } from '../../core/sunsetAPI'
 
 class Search extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class Search extends Component {
   }
 
   componentWillMount() {
-    sunsetLogin()
+    getCoordinates()
   }
 
   render() {
