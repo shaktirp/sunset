@@ -1,6 +1,7 @@
 import SunsetWx from 'node-sunsetwx';
-const obj = {}
-const sunsetwx = new SunsetWx(obj);
+import keys from '../config/keys';
+
+const sunsetwx = new SunsetWx(keys);
 
 export function sunsetLogin() {
   const localStorageKey = 'sunsetLoginKey'

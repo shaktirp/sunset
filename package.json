@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "dotenv": "^5.0.0",
     "json-update": "^3.0.0",
     "jsonfile": "^4.0.0",
     "material-ui": "^0.20.0",
