@@ -1,6 +1,5 @@
-import obj from '../model/data.json';
 import SunsetWx from 'node-sunsetwx';
-
+const obj = {}
 const sunsetwx = new SunsetWx(obj);
 
 export function sunsetLogin() {
