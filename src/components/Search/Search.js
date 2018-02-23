@@ -76,7 +76,9 @@ class Search extends Component {
         />
         <br />
         <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
-        <Results qualityArr={quality} />
+        {quality.length > 0 &&
+          <Results qualityArr={quality} />
+        }
       </div>
     );
   }
