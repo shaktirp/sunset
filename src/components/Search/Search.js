@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import './Search.css';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
-import { getCoordinates } from '../../core/sunsetAPI'
+import './Search.css';
+import { getCoordinates, getQuality } from '../../core/sunsetAPI'
+import Results from '../Results/Results'
 
 class Search extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
-  }
-
-  componentWillMount() {
-    getCoordinates('San Francisco, CA', this.getCoordinatesCallBack)
+    this.state = {
+      quality: [],
+      city: ''
+    }
   }
 
   getCoordinatesCallBack = (err, response, body) => {
@@ -23,21 +22,62 @@ class Search extends Component {
       const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
 
       const coords = xCoordinate + "," + yCoordinate
-      console.log(coords)
-      // getQuality(coords, 'sunset')
-      // getQuality(coords, 'sunrise')
+
+      getQuality(coords, 'sunset', this.getQualityCallback)
+      getQuality(coords, 'sunrise', this.getQualityCallback)
+    }
+  }
+
+  getQualityCallback = (err, response, body) => {
+    const qualityObj = body["features"][0]["properties"]
+    const stateQuality = this.state.quality
+
+    stateQuality.push({
+      type: qualityObj['type'],
+      quality: qualityObj['quality'],
+      time: qualityObj['valid_at'],
+      temperature: qualityObj['temperature']
+    })
+
+    this.setState({
+      quality: stateQuality
+    })
+  }
+
+  handleSearchClick = () => {
+    if (this.state.city) {
+      getCoordinates(this.state.city, this.getCoordinatesCallBack)
+    } else {
+      alert('Please enter a city')
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({ city: e.target.value });
+  }
+
+  handleKeyPress = (e) => {
+    if(e.key === 'Enter'){
+      this.handleSearchClick()
     }
   }
 
   render() {
+    const { quality } = this.state
+
     return (
-      <MuiThemeProvider>
-        <div className="searchContainer">
-          <TextField hintText="San Francisco, CA" className="searchField" />
-          <br />
-          <RaisedButton label="Check quality" primary={true} />
-        </div>
-      </MuiThemeProvider>
+      <div className="searchContainer">
+        <TextField
+          hintText="San Francisco, CA"
+          className="searchField"
+          value={this.state.city}
+          onChange={this.handleChange.bind(this)}
+          onKeyPress={this.handleKeyPress}
+        />
+        <br />
+        <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
+        <Results qualityArr={quality} />
+      </div>
     );
   }
 }

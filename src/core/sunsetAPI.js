@@ -22,12 +22,9 @@ export function getCoordinates(location, callback) {
   }, callback)
 }
 
-export function getQuality(coords, type) {
+export function getQuality(coords, type, callback) {
   sunsetwx.quality({
     coords: coords,
     type: type
-  }, (err, response, body) => {
-    const props = body["features"][0]["properties"]
-    console.log(props['type'], props['quality'], props['temperature'])
-  })
+  }, callback)
 }
