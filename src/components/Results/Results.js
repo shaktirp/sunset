@@ -61,7 +61,7 @@ class Results extends Component {
             <TableRow key={index}>
               <TableRowColumn>{row.type}</TableRowColumn>
               <TableRowColumn>{row.quality}</TableRowColumn>
-              <TableRowColumn>{row.time}</TableRowColumn>
+              <TableRowColumn title={row.time}>{row.time}</TableRowColumn>
               <TableRowColumn>{row.temperature}</TableRowColumn>
             </TableRow>
             ))}

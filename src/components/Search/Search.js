@@ -32,10 +32,13 @@ class Search extends Component {
     const qualityObj = body["features"][0]["properties"]
     const stateQuality = this.state.quality
 
+    let d = new Date(qualityObj['valid_at'])
+    d = d.toLocaleTimeString() + ' ' + d.toLocaleDateString()
+
     stateQuality.push({
       type: qualityObj['type'],
       quality: qualityObj['quality'],
-      time: qualityObj['valid_at'],
+      time: d,
       temperature: qualityObj['temperature']
     })
 
