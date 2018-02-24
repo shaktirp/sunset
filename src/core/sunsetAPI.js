@@ -1,7 +1,6 @@
 import SunsetWx from 'node-sunsetwx';
 import keys from '../config/keys';
 
-console.log('keys', keys, process.env)
 const sunsetwx = new SunsetWx(keys);
 
 export function sunsetLogin() {
