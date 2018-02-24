@@ -2,22 +2,28 @@ import React, { Component } from 'react';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import './Search.css';
 import { getCoordinates, getQuality } from '../../core/sunsetAPI'
 import Results from '../Results/Results'
+import DialogBox from '../DialogBox/DialogBox'
 
 class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
       quality: [],
-      city: ''
+      city: '',
+      loading: false,
+      error: false
     }
+
+    this.handler = this.handler.bind(this)
   }
 
   getCoordinatesCallBack = (err, response, body) => {
-    if (!err) {
+    if (!err && body["features"]) {
       const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
       const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
 
@@ -25,6 +31,11 @@ class Search extends Component {
 
       getQuality(coords, 'sunset', this.getQualityCallback)
       getQuality(coords, 'sunrise', this.getQualityCallback)
+    } else {
+      this.setState({
+        error: true,
+        loading: false
+      })
     }
   }
 
@@ -43,11 +54,16 @@ class Search extends Component {
     })
 
     this.setState({
-      quality: stateQuality
+      quality: stateQuality,
+      loading: false
     })
   }
 
   handleSearchClick = () => {
+    this.setState({
+      quality: [],
+      loading: true
+    })
     if (this.state.city) {
       getCoordinates(this.state.city, this.getCoordinatesCallBack)
     } else {
@@ -65,8 +81,15 @@ class Search extends Component {
     }
   }
 
+  handler = (e) => {
+    e.preventDefault()
+    this.setState({
+      error: false
+    })
+  }
+
   render() {
-    const { quality } = this.state
+    const { quality, loading, error } = this.state
 
     return (
       <div className="searchContainer">
@@ -78,9 +101,17 @@ class Search extends Component {
           onKeyPress={this.handleKeyPress}
         />
         <br />
-        <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
+        {loading
+          ? <CircularProgress />
+          : <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
+        }
+
         {quality.length > 0 &&
           <Results qualityArr={quality} />
+        }
+
+        {error === true &&
+          <DialogBox handler={this.handler} />
         }
       </div>
     );
