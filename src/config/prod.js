@@ -1,4 +1,4 @@
 module.exports = {
-  email: process.env.EMAIL,
-  password: process.env.PASS
+  email: process.env.REACT_APP_EMAIL,
+  password: process.env.REACT_APP_PASS
 }
