@@ -19,11 +19,12 @@ class Search extends Component {
       error: false
     }
 
-    this.handler = this.handler.bind(this)
+    this.handleDialog = this.handleDialog.bind(this)
   }
 
   getCoordinatesCallBack = (err, response, body) => {
     if (!err && body["features"]) {
+      console.log('Got Co ordinates', body)
       const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
       const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
 
@@ -40,6 +41,7 @@ class Search extends Component {
   }
 
   getQualityCallback = (err, response, body) => {
+    console.log('Got quality', body)
     const qualityObj = body["features"][0]["properties"]
     const stateQuality = this.state.quality
 
@@ -62,7 +64,8 @@ class Search extends Component {
   handleSearchClick = () => {
     this.setState({
       quality: [],
-      loading: true
+      loading: true,
+      city: this.searchTextCorrection(this.state.city)
     })
     if (this.state.city) {
       getCoordinates(this.state.city, this.getCoordinatesCallBack)
@@ -81,11 +84,19 @@ class Search extends Component {
     }
   }
 
-  handler = (e) => {
+  handleDialog = (e) => {
     e.preventDefault()
     this.setState({
       error: false
     })
+  }
+
+  searchTextCorrection = (str) => {
+    const commaIndex = str.indexOf(',')
+    if (commaIndex > 1 && str[commaIndex + 1] !== ' ') {
+      return str.substring(0, commaIndex + 1) + ' ' + str.substring(commaIndex + 1)
+    }
+    return str
   }
 
   render() {
@@ -100,7 +111,9 @@ class Search extends Component {
           onChange={this.handleChange.bind(this)}
           onKeyPress={this.handleKeyPress}
         />
+
         <br />
+
         {loading
           ? <CircularProgress />
           : <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
@@ -111,7 +124,7 @@ class Search extends Component {
         }
 
         {error === true &&
-          <DialogBox handler={this.handler} />
+          <DialogBox handler={this.handleDialog} />
         }
       </div>
     );
