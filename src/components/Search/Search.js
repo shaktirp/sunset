@@ -103,7 +103,7 @@ class Search extends Component {
     const { quality, loading, error } = this.state
 
     return (
-      <div className="searchContainer">
+      <div className={"searchContainer " + (quality.length > 0 ? 'searchContainerAfterResults' : 'searchContainerBeforeResults')}>
         <TextField
           hintText="San Francisco, CA"
           className="searchField"

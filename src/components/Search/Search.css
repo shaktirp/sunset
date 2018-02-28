@@ -3,7 +3,16 @@
   text-align: center;
   vertical-align: middle;
   position: absolute;
+  margin-top: 20px
+}
+
+.searchContainerBeforeResults {
   top: 20%;
+}
+
+.searchContainerAfterResults {
+  top: 0%;
+  transition:top 0.2s linear;
 }
 
 .searchField {
