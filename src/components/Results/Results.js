@@ -22,7 +22,6 @@ class Results extends Component {
     enableSelectAll: false,
     deselectOnClickaway: true,
     showCheckboxes: false,
-    height: '300px',
   };
 
 
@@ -33,7 +32,6 @@ class Results extends Component {
     return (
       <div className="tableContainer">
         <Table
-          height={this.state.height}
           fixedHeader={this.state.fixedHeader}
           fixedFooter={this.state.fixedFooter}
           selectable={this.state.selectable}
@@ -48,7 +46,7 @@ class Results extends Component {
               <TableHeaderColumn>Type</TableHeaderColumn>
               <TableHeaderColumn>Quality</TableHeaderColumn>
               <TableHeaderColumn>Time</TableHeaderColumn>
-              <TableHeaderColumn>Temperature</TableHeaderColumn>
+              <TableHeaderColumn>Temperature (C)</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody

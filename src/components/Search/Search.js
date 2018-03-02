@@ -5,16 +5,17 @@ import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import './Search.css';
-import { getCoordinates, getQuality } from '../../core/sunsetAPI'
-import Results from '../Results/Results'
+import { getCoordinates } from '../../core/sunsetAPI'
+import FeatureList from '../FeatureList/FeatureList'
 import DialogBox from '../DialogBox/DialogBox'
 
 class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      quality: [],
-      city: '',
+      features: [],
+      city: 'San Francisco, CA',
+      resultsClass: 'searchContainerBeforeResults',
       loading: false,
       error: false
     }
@@ -25,13 +26,20 @@ class Search extends Component {
   getCoordinatesCallBack = (err, response, body) => {
     if (!err && body["features"]) {
       console.log('Got Co ordinates', body)
-      const xCoordinate = body["features"][0]["geometry"]["coordinates"][0]
-      const yCoordinate = body["features"][0]["geometry"]["coordinates"][1]
 
-      const coords = xCoordinate + "," + yCoordinate
+      var refinedFeatures = body["features"].map(function(feature) {
+        return {
+          place: feature["properties"]["locale"],
+          state: feature["properties"]["state"],
+          x: feature["geometry"]["coordinates"][0],
+          y: feature["geometry"]["coordinates"][1]
+        }
+      })
 
-      getQuality(coords, 'sunset', this.getQualityCallback)
-      getQuality(coords, 'sunrise', this.getQualityCallback)
+      this.setState({
+        features: refinedFeatures,
+        loading: false
+      })
     } else {
       this.setState({
         error: true,
@@ -40,32 +48,12 @@ class Search extends Component {
     }
   }
 
-  getQualityCallback = (err, response, body) => {
-    console.log('Got quality', body)
-    const qualityObj = body["features"][0]["properties"]
-    const stateQuality = this.state.quality
-
-    let d = new Date(qualityObj['valid_at'])
-    d = d.toLocaleTimeString() + ' ' + d.toLocaleDateString()
-
-    stateQuality.push({
-      type: qualityObj['type'],
-      quality: qualityObj['quality'],
-      time: d,
-      temperature: qualityObj['temperature']
-    })
-
-    this.setState({
-      quality: stateQuality,
-      loading: false
-    })
-  }
-
   handleSearchClick = () => {
     this.setState({
-      quality: [],
       loading: true,
-      city: this.searchTextCorrection(this.state.city)
+      resultsClass: '',
+      city: this.searchTextCorrection(this.state.city),
+      features: []
     })
     if (this.state.city) {
       getCoordinates(this.state.city, this.getCoordinatesCallBack)
@@ -100,10 +88,14 @@ class Search extends Component {
   }
 
   render() {
-    const { quality, loading, error } = this.state
+    const {
+      features,
+      loading,
+      error
+    } = this.state
 
     return (
-      <div className={"searchContainer " + (quality.length > 0 ? 'searchContainerAfterResults' : 'searchContainerBeforeResults')}>
+      <div className={"searchContainer " + (this.state.resultsClass)}>
         <TextField
           hintText="San Francisco, CA"
           className="searchField"
@@ -119,8 +111,8 @@ class Search extends Component {
           : <RaisedButton onClick={this.handleSearchClick} label="Check quality" primary={true} />
         }
 
-        {quality.length > 0 &&
-          <Results qualityArr={quality} />
+        {features.length > 0 &&
+          <FeatureList features={features} />
         }
 
         {error === true &&
