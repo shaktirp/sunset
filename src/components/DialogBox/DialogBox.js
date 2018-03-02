@@ -33,7 +33,7 @@ class DialogBox extends Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
-          Please enter a city and state separated by comma. Example - San Francisco, CA or Portland, OR
+          Please retry, possibly in this format -> San Francisco, CA or Portland, OR
         </Dialog>
       </div>
     );

@@ -14,7 +14,7 @@ class Search extends Component {
     super(props)
     this.state = {
       features: [],
-      city: 'San Francisco, CA',
+      city: '',
       resultsClass: 'searchContainerBeforeResults',
       loading: false,
       error: false
@@ -31,6 +31,7 @@ class Search extends Component {
         return {
           place: feature["properties"]["locale"],
           state: feature["properties"]["state"],
+          country: feature["properties"]["country"],
           x: feature["geometry"]["coordinates"][0],
           y: feature["geometry"]["coordinates"][1]
         }

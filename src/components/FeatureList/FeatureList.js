@@ -64,7 +64,7 @@ class FeatureList extends Component {
             <MenuItem
               key={index+1}
               value={row}
-              primaryText={row.place + ", " + row.state}
+              primaryText={row.place + (row.state ? ", " + row.state : '') + (row.country ? ", " + row.country : '')}
             />
           ))}
         </DropDownMenu>
